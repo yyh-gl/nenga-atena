@@ -1,4 +1,4 @@
-import { PDFDocument, PDFImage } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 import { consistentAddress, Family } from './family';
 import { drawPath, loadFont } from './font';
 import { FontSizes, LineHeights, Positions } from './style';
@@ -99,7 +99,7 @@ export const drawFamilyImage = async (
   ].filter((name) => name.length > 0);
   const maxPersonalNameLength = Math.max(...names.map((name) => name.length));
   const familyName =
-    family.familyName + (family.familyName.length + maxPersonalNameLength < 4 ? '　' : '');
+    family.familyName + ' ' + (family.familyName.length + maxPersonalNameLength < 4 ? '　' : '');
 
   for (let namei = 0; namei < names.length; namei++) {
     const x = positions.name[0] - namei * lineHeights.name;
