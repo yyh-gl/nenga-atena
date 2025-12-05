@@ -12,6 +12,19 @@ export interface Family {
   consecutiveName3: string;
 }
 
+export interface Sender {
+  postalCode: string;
+  prefecture: string;
+  municipalities: string;
+  address: string;
+  building: string;
+  familyName: string;
+  personalName: string;
+  consecutiveName1: string;
+  consecutiveName2: string;
+  consecutiveName3: string;
+}
+
 export const familyFields: { key: keyof Family; label: string }[] = [
   { key: 'enabled', label: '印刷' },
   { key: 'familyName', label: '姓' },
@@ -53,6 +66,39 @@ export const readCsv = (csv: string) => {
     data.push(family as any as Family);
   }
   return data;
+};
+
+export const readSenderFromCsv = (csv: string): Sender | null => {
+  const lines = csv.split('\n');
+  if (lines.length < 2) {
+    return null;
+  }
+  const headers = lines[0].split(',');
+  const bodies = lines[1].split(',');
+  const reversedLabels: { [key in string]: string } = familyFields.reduce(
+    (previous, current) => ({ [current.label]: current.key, ...previous }),
+    {},
+  );
+
+  const sender: { [key in string]: any } = {};
+  for (let x = 0; x < Math.min(bodies.length, headers.length); x++) {
+    if (headers[x] in reversedLabels) {
+      sender[reversedLabels[headers[x]]] = bodies[x];
+    }
+  }
+
+  return {
+    postalCode: sender.postalCode || '',
+    prefecture: sender.prefecture || '',
+    municipalities: sender.municipalities || '',
+    address: sender.address || '',
+    building: sender.building || '',
+    familyName: sender.familyName || '',
+    personalName: sender.personalName || '',
+    consecutiveName1: sender.consecutiveName1 || '',
+    consecutiveName2: sender.consecutiveName2 || '',
+    consecutiveName3: sender.consecutiveName3 || '',
+  };
 };
 
 export const familiesToCsv = (families: Family[]) => {

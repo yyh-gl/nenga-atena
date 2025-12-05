@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { drawLineChars, mmToCanvasPx } from '../utils/draw';
-import { Family } from '../utils/family';
+import { Family, Sender } from '../utils/family';
 import { drawFamilyImage } from '../utils/draw';
 import { FontSizes, LineHeights, Part, Positions } from '../utils/style';
 
@@ -38,6 +38,7 @@ const BgImg = styled.img`
 
 interface PostCardProps {
   families: Family[];
+  sender: Sender | null;
   selectedFamilyIndex: number;
   positions: Positions;
   fontSizes: FontSizes;
@@ -50,6 +51,7 @@ interface PostCardProps {
 
 const PostCard = ({
   families,
+  sender,
   selectedFamilyIndex,
   positions,
   fontSizes,
@@ -118,6 +120,7 @@ const PostCard = ({
     if (context && selectedFamilyIndex >= 0 && selectedFamilyIndex < families.length) {
       drawFamilyImage(
         families[selectedFamilyIndex],
+        sender,
         positions,
         fontSizes,
         lineHeights,
@@ -129,6 +132,7 @@ const PostCard = ({
     }
   }, [
     families,
+    sender,
     selectedFamilyIndex,
     positions,
     fontSizes,

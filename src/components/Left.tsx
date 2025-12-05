@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import PostCard from './PostCard';
 import PostCardSettings from './PostCardSettings';
-import { Family } from '../utils/family';
+import { Family, Sender } from '../utils/family';
 import { Button } from '../utils/components';
 import { Part, FontSizes, LineHeights, Positions } from '../utils/style';
 
@@ -25,6 +25,7 @@ const Index = styled.div`
 
 interface LeftProps {
   selectedFamilies: Family[];
+  sender: Sender | null;
   selectedFamilyIndex: number;
   positions: Positions;
   fontSizes: FontSizes;
@@ -42,6 +43,7 @@ interface LeftProps {
 
 const Left = ({
   selectedFamilies,
+  sender,
   selectedFamilyIndex,
   positions,
   fontSizes,
@@ -62,6 +64,7 @@ const Left = ({
     <Wrapper>
       <PostCard
         families={selectedFamilies}
+        sender={sender}
         selectedFamilyIndex={selectedFamilyIndex}
         positions={positions}
         fontSizes={fontSizes}

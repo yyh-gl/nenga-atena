@@ -6,14 +6,16 @@ import Address from './Address';
 import Left from './Left';
 import { fontFamily } from '../const/style';
 import {
+  Family,
   fillFamilies,
   readCsv,
+  readSenderFromCsv,
   saveCsv,
   saveFamiliesToLocalStorage,
-  Family,
+  Sender,
 } from '../utils/family';
 import { outputPdf } from '../utils/draw';
-import { saveStylesToLocalStorage, FontSizes, LineHeights, Positions } from '../utils/style';
+import { FontSizes, LineHeights, Positions, saveStylesToLocalStorage } from '../utils/style';
 
 const Page = styled.div`
   font-size: 14px;
@@ -50,6 +52,7 @@ const Footer = styled.footer`
 
 const App = () => {
   const [families, setFamilies] = useState<Family[]>([]);
+  const [sender, setSender] = useState<Sender | null>(null);
   const [selectedFamilyIndex, setSelectedFamilyIndex] = useState(0);
   const [editsCsv, setEditsCsv] = useState(false);
   const [displaysOnlyPrintable, setDisplaysOnlyPrintable] = useState(false);
@@ -59,16 +62,25 @@ const App = () => {
     postalCode: [45, 11.75],
     address: [90, 30],
     name: [62, 48],
+    senderPostalCode: [4, 123],
+    senderAddress: [20, 60],
+    senderName: [10, 80],
   });
   const [fontSizes, setFontSizes] = useState<FontSizes>({
     postalCode: 8,
     address: 5,
-    name: 10,
+    name: 8,
+    senderPostalCode: 5,
+    senderAddress: 4,
+    senderName: 5,
   });
   const [lineHeights, setLineHeights] = useState<LineHeights>({
     postalCode: 8,
     address: 7,
     name: 13,
+    senderPostalCode: 3,
+    senderAddress: 3.5,
+    senderName: 5,
   });
   const [addressMaxChars, setAddressMaxChars] = useState<number>(12);
   const [postalCodeAdvance, setPostalCodeAdvance] = useState<number>(7);
@@ -106,7 +118,12 @@ const App = () => {
 
   const updateCsvData = (csv: string) => {
     const families = readCsv(csv);
+    const senderData = readSenderFromCsv(csv);
     updateFamilies(families);
+    setSender(senderData);
+    if (senderData) {
+      localStorage.setItem('sender', JSON.stringify(senderData));
+    }
   };
 
   const saveCsvWrapper = () => {
@@ -130,6 +147,7 @@ const App = () => {
   const outputPdfWrapper = () => {
     outputPdf(
       selectedFamilies,
+      sender,
       positions,
       fontSizes,
       lineHeights,
@@ -147,6 +165,12 @@ const App = () => {
       if (Array.isArray(familyArray)) {
         updateFamilies(familyArray);
       }
+    }
+
+    const senderJson = localStorage.getItem('sender');
+    if (senderJson) {
+      const senderData = JSON.parse(senderJson);
+      setSender(senderData);
     }
 
     const stylesJson = localStorage.getItem('styles');
@@ -183,6 +207,7 @@ const App = () => {
         <LeftWrapper>
           <Left
             selectedFamilies={selectedFamilies}
+            sender={sender}
             selectedFamilyIndex={selectedFamilyIndex}
             positions={positions}
             fontSizes={fontSizes}
