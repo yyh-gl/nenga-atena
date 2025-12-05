@@ -1,3 +1,5 @@
+**/*.csv
+
 # mac OS
 .DS_Store
 .AppleDouble
