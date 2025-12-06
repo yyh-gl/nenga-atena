@@ -62,9 +62,9 @@ const App = () => {
     postalCode: [45, 11.75],
     address: [90, 30],
     name: [62, 48],
-    senderPostalCode: [4, 123],
-    senderAddress: [20, 60],
-    senderName: [10, 80],
+    senderPostalCode: [7, 120],
+    senderAddress: [28, 60],
+    senderName: [15, 80],
   });
   const [fontSizes, setFontSizes] = useState<FontSizes>({
     postalCode: 8,

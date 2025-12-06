@@ -14,7 +14,7 @@ export const mmToCanvasPx = (mm: number) => {
   return mm * canvasScale;
 };
 
-const getNameScaleFactor = (nameCount: number): number => {
+const getNameFontScaleFactor = (nameCount: number): number => {
   switch (nameCount) {
     case 1:
       return 1.0;
@@ -26,6 +26,23 @@ const getNameScaleFactor = (nameCount: number): number => {
       return 0.85;
     case 5:
       return 0.8;
+    default:
+      return 1.0;
+  }
+};
+
+const getNameLineHeightScaleFactor = (nameCount: number): number => {
+  switch (nameCount) {
+    case 1:
+      return 1.0;
+    case 2:
+      return 0.85;
+    case 3:
+      return 0.75;
+    case 4:
+      return 0.6;
+    case 5:
+      return 0.48;
     default:
       return 1.0;
   }
@@ -120,9 +137,10 @@ export const drawFamilyImage = async (
   const familyName =
     family.familyName + ' ' + (family.familyName.length + maxPersonalNameLength < 4 ? '　' : '');
 
-  const nameScaleFactor = getNameScaleFactor(names.length);
-  const scaledNameFontSize = fontSizes.name * nameScaleFactor;
-  const scaledNameLineHeight = lineHeights.name * nameScaleFactor;
+  const nameFontScaleFactor = getNameFontScaleFactor(names.length);
+  const scaledNameFontSize = fontSizes.name * nameFontScaleFactor;
+  const nameLineHeightFontScaleFactor = getNameLineHeightScaleFactor(names.length);
+  const scaledNameLineHeight = lineHeights.name * nameLineHeightFontScaleFactor;
 
   for (let namei = 0; namei < names.length; namei++) {
     const x = positions.name[0] - namei * scaledNameLineHeight;
@@ -207,7 +225,7 @@ export const drawFamilyImage = async (
     const senderFamilyName =
       sender.familyName + ' ' + (sender.familyName.length + maxSenderNameLength < 4 ? '　' : '');
 
-    const senderNameScaleFactor = getNameScaleFactor(senderNames.length);
+    const senderNameScaleFactor = getNameLineHeightScaleFactor(senderNames.length);
     const scaledSenderNameFontSize = fontSizes.senderName * senderNameScaleFactor;
     const scaledSenderNameLineHeight = lineHeights.senderName * senderNameScaleFactor;
 
