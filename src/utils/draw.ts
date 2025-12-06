@@ -14,6 +14,23 @@ export const mmToCanvasPx = (mm: number) => {
   return mm * canvasScale;
 };
 
+const getNameScaleFactor = (nameCount: number): number => {
+  switch (nameCount) {
+    case 1:
+      return 1.0;
+    case 2:
+      return 0.95;
+    case 3:
+      return 0.9;
+    case 4:
+      return 0.85;
+    case 5:
+      return 0.8;
+    default:
+      return 1.0;
+  }
+};
+
 export const drawLineChars = (
   text: string,
   position: [number, number],
@@ -97,13 +114,18 @@ export const drawFamilyImage = async (
     family.consecutiveName1,
     family.consecutiveName2,
     family.consecutiveName3,
+    family.consecutiveName4,
   ].filter((name) => name.length > 0);
   const maxPersonalNameLength = Math.max(...names.map((name) => name.length));
   const familyName =
     family.familyName + ' ' + (family.familyName.length + maxPersonalNameLength < 4 ? '　' : '');
 
+  const nameScaleFactor = getNameScaleFactor(names.length);
+  const scaledNameFontSize = fontSizes.name * nameScaleFactor;
+  const scaledNameLineHeight = lineHeights.name * nameScaleFactor;
+
   for (let namei = 0; namei < names.length; namei++) {
-    const x = positions.name[0] - namei * lineHeights.name;
+    const x = positions.name[0] - namei * scaledNameLineHeight;
     const name = consistentAddress(
       (namei === 0 ? familyName : '　'.repeat(familyName.length)) + names[namei],
     );
@@ -111,19 +133,19 @@ export const drawFamilyImage = async (
       name,
       [x, positions.name[1]],
       fontName,
-      fontSizes.name,
-      fontSizes.name,
+      scaledNameFontSize,
+      scaledNameFontSize,
       true,
       context,
     );
     const suffixRatio = 0.7;
     const suffixY =
-      positions.name[1] + fontSizes.name * (familyName.length + maxPersonalNameLength) + 4;
+      positions.name[1] + scaledNameFontSize * (familyName.length + maxPersonalNameLength) + 4;
     drawLineChars(
       '様',
-      [x - (fontSizes.name * (1.0 - suffixRatio)) / 2, suffixY],
+      [x - (scaledNameFontSize * (1.0 - suffixRatio)) / 2, suffixY],
       fontName,
-      fontSizes.name * suffixRatio,
+      scaledNameFontSize * suffixRatio,
       0,
       true,
       context,
@@ -179,13 +201,18 @@ export const drawFamilyImage = async (
       sender.consecutiveName1,
       sender.consecutiveName2,
       sender.consecutiveName3,
+      sender.consecutiveName4,
     ].filter((name) => name.length > 0);
     const maxSenderNameLength = Math.max(...senderNames.map((name) => name.length));
     const senderFamilyName =
       sender.familyName + ' ' + (sender.familyName.length + maxSenderNameLength < 4 ? '　' : '');
 
+    const senderNameScaleFactor = getNameScaleFactor(senderNames.length);
+    const scaledSenderNameFontSize = fontSizes.senderName * senderNameScaleFactor;
+    const scaledSenderNameLineHeight = lineHeights.senderName * senderNameScaleFactor;
+
     for (let namei = 0; namei < senderNames.length; namei++) {
-      const x = positions.senderName[0] - namei * lineHeights.senderName;
+      const x = positions.senderName[0] - namei * scaledSenderNameLineHeight;
       const name = consistentAddress(
         (namei === 0 ? senderFamilyName : '　'.repeat(senderFamilyName.length)) +
           senderNames[namei],
@@ -194,8 +221,8 @@ export const drawFamilyImage = async (
         name,
         [x, positions.senderName[1]],
         fontName,
-        fontSizes.senderName,
-        fontSizes.senderName,
+        scaledSenderNameFontSize,
+        scaledSenderNameFontSize,
         true,
         context,
       );

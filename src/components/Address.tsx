@@ -127,6 +127,7 @@ const Address = ({
               <Th length={5}>連名1</Th>
               <Th length={5}>連名2</Th>
               <Th length={5}>連名3</Th>
+              <Th length={5}>連名4</Th>
             </Tr>
             {displayingFamilies.map((family, lineIndex) => {
               const errors: string[] = [];

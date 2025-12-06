@@ -10,6 +10,7 @@ export interface Family {
   consecutiveName1: string;
   consecutiveName2: string;
   consecutiveName3: string;
+  consecutiveName4: string;
 }
 
 export interface Sender {
@@ -23,6 +24,7 @@ export interface Sender {
   consecutiveName1: string;
   consecutiveName2: string;
   consecutiveName3: string;
+  consecutiveName4: string;
 }
 
 export const familyFields: { key: keyof Family; label: string }[] = [
@@ -37,19 +39,20 @@ export const familyFields: { key: keyof Family; label: string }[] = [
   { key: 'consecutiveName1', label: '連名1' },
   { key: 'consecutiveName2', label: '連名2' },
   { key: 'consecutiveName3', label: '連名3' },
+  { key: 'consecutiveName4', label: '連名4' },
 ];
 
 export const readCsv = (csv: string) => {
   const data: Family[] = [];
   const lines = csv.split('\n');
-  const headers = lines[0].split(',');
+  const headers = lines[0].split(',').map((header) => header.trim());
   const reversedLabels: { [key in string]: string } = familyFields.reduce(
     (previous, current) => ({ [current.label]: current.key, ...previous }),
     {},
   );
 
   for (let y = 1; y < lines.length; y++) {
-    const bodies = lines[y].split(',');
+    const bodies = lines[y].split(',').map((body) => body.trim());
     const family: { [key in string]: any } = { enabled: false };
     for (let x = 0; x < Math.min(bodies.length, headers.length); x++) {
       if (headers[x] === '印刷') {
@@ -98,6 +101,7 @@ export const readSenderFromCsv = (csv: string): Sender | null => {
     consecutiveName1: sender.consecutiveName1 || '',
     consecutiveName2: sender.consecutiveName2 || '',
     consecutiveName3: sender.consecutiveName3 || '',
+    consecutiveName4: sender.consecuxtiveName4 || '',
   };
 };
 
@@ -148,7 +152,8 @@ export const isEmptyFamily = (family: Family) =>
   family.building.length === 0 &&
   family.consecutiveName1.length === 0 &&
   family.consecutiveName2.length === 0 &&
-  family.consecutiveName3.length === 0;
+  family.consecutiveName3.length === 0 &&
+  family.consecutiveName4.length === 0;
 
 export const fillFamilies = (families: Family[]) => {
   const filteredFamilies = families.filter((family) => !isEmptyFamily(family));
@@ -164,6 +169,7 @@ export const fillFamilies = (families: Family[]) => {
     consecutiveName1: '',
     consecutiveName2: '',
     consecutiveName3: '',
+    consecutiveName4: '',
   }));
   return [...filteredFamilies, ...newFamily];
 };
